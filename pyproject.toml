@@ -4,31 +4,27 @@ version = "0.1.0"
 description = ""
 authors = ["Simone Lederer <simone.lederer@zeiss.com>"]
 readme = "README.md"
-packages = [{include = "*", from="src"}]
+packages = [{include = "pcb", from="src"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
 pathlib = "^1.0.1"
 scikit-learn = "^1.5.2"
 pandas = "^2.2.3"
-numpy = "^2.1.2"
 matplotlib = "^3.9.2"
 pyyaml = "^6.0.2"
-
-
-[tool.poetry.group.deep.dependencies]
-torch = "^2.4.1"
-ultralytics = "^8.3.10"
-opencv-python = "^4.10.0.84"
+numpy = "^2.1.2"
+fastparquet = "^2024.5.0"
 
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.7.0"
 ruff = "^0.4.2"
 
-
-
-
+[tool.poetry.group.deep.dependencies]
+torch = "^2.4.1"
+ultralytics = "^8.3.10"
+opencv-python = "^4.10.0.84"
 
 [[tool.poetry.source]]
 name = "PyPI"

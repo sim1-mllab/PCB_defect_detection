@@ -2,15 +2,22 @@ from matplotlib import pyplot as plt
 import pandas as pd
 
 
-def plot_results(results_df: pd.DataFrame) -> plt.Figure:
+def plot_result_losses_over_epoch(results_df: pd.DataFrame) -> plt.Figure:
+    """
+    Plot the losses over the epochs
+    :param results_df: DataFrame containing the results
+    :return: plt.Figure object with the errors shown over the epochs
+    """
     fig, ax = plt.subplots(1, 3, figsize=(20, 10))
 
     ax = _plot_axis(ax=ax, ax_idx=0, results_df=results_df, x_col='epoch', y_train_col='train/cls_loss',
                                   y_val_col="val/cls_loss", title='Classification Loss', xlabel='Epoch',
                                   ylabel='Classification Loss')
     ax = _plot_axis(ax=ax, ax_idx=1, results_df=results_df, x_col='epoch', y_train_col='train/box_loss',
+                    y_val_col="val/box_loss",
                     title='Box Loss', xlabel='Epoch', ylabel='Box Loss')
-    ax = _plot_axis(ax=ax, ax_idx=2, results_df=results_df, x_col='epoch', y_train_col='train/df_loss',
+    ax = _plot_axis(ax=ax, ax_idx=2, results_df=results_df, x_col='epoch', y_train_col='train/dfl_loss',
+                    y_val_col="val/dfl_loss",
                     title='DF Loss', xlabel='Epoch', ylabel='Distribution Focal Loss')
 
     plt.tight_layout()

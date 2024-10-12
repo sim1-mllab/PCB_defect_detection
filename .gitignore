@@ -8,6 +8,7 @@ data/
 
 # IGNORE YOLO
 *yolov8*
+runs/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -6,7 +6,6 @@ from collections import Counter
 
 from sklearn.model_selection import KFold
 
-# %%
 from pcb.process.load import parse_xml
 from pcb.process.preprocess import resize_images, resize_annotations
 from pcb.visualizations.annotations import visualize_annotations

@@ -1,31 +1,30 @@
 import shutil
 from pathlib import Path
-
-import matplotlib.pyplot as plt
 import pandas as pd
+from matplotlib import pyplot as plt
 
-from pcb.visualizations.results import plot_results
+from pcb.visualizations.results import plot_result_losses_over_epoch
+
+# Set the root directory and data directory
 root_dir = Path.cwd().parent.resolve()
 data_dir = root_dir / 'PCB_DATASET'
+results_dir = root_dir / 'results'
 
 
 # Copy the results directory to the root directory
-model_dir = 'pcb_yolo8n_all_epochs_10_batch_16'
-results_dir = root_dir / model_dir / 'train'
-dest_results_dir = root_dir / 'results'
+model_dir = 'pcb_yolov8n_all_epochs_10_batch_16'
+results_model_dir = Path.cwd() / model_dir / 'train'
 
-shutil.copytree(results_dir, dest_results_dir)
-
-
-results_df = pd.read_csv(dest_results_dir / 'results.csv', index_col=0)
+shutil.copytree(src=results_model_dir, dst=results_dir)
+#%%
+results_df = pd.read_csv(results_dir / 'results.csv', index_col=0)
 results_df.columns = results_df.columns.str.strip()
 results_df = results_df.apply(pd.to_numeric, errors='coerce').dropna()
+results_df.reset_index(inplace=True)
 
-#%% print results
-results_df.head()
 #%%
-fig = plot_results(results_df=results_df)
+fig = plot_result_losses_over_epoch(results_df=results_df)
 
-plt.show()
-fig.savefig(f'results_{model_dir}.png')
+#%%
+fig.savefig(results_dir / f'results_errors_{model_dir}.png')
 
