@@ -34,17 +34,27 @@ def convert_to_yolo_labels(annotation_df: pd.DataFrame, classes: list) -> list:
 
 
 def read_yolo_labels_from_file(file_path: str | pathlib.Path) -> list:
-    labels = []
+    """
+    Read YOLO labels from a file
+    :param file_path:
+    :return:
+    """
     with open(file_path, 'r') as file:
-        for line in file:
-            values = line.strip().split()
-            values = [float(value) for value in values]
-            labels.append(values)
+        labels = [[float(value) for value in line.strip().split()] for line in file]
     return labels
 
 
-
-def split_images_and_labels(images_dir, labels, output_dir, train_split=0.95, val_split=0.05):
+def split_images_and_labels(images_dir: pathlib.Path, labels: list, output_dir: pathlib.Path, train_split: float = 0.95,
+                            val_split: float = 0.05) -> None:
+    """
+    Split images and labels into train, validation, and test sets
+    :param images_dir: input directory containing images
+    :param labels: list of YOLO labels
+    :param output_dir: output directory
+    :param train_split: train split ratio
+    :param val_split: validation split ratio
+    :return:
+    """
     # os.makedirs(output_dir, exist_ok=True)
 
     for folder in ['images/train', 'images/val', 'images/test', 'labels/train', 'labels/val', 'labels/test']:
@@ -76,7 +86,8 @@ def split_images_and_labels(images_dir, labels, output_dir, train_split=0.95, va
     for dataset, filenames in [('train', train_filenames), ('val', val_filenames), ('test', test_filenames)]:
         for filename in filenames:
             labels = image_labels[filename]
-            with open((output_dir / f'labels/{dataset}/{os.path.splitext(filename)[0]}.txt'), 'a') as label_file:
+            label_file_path = output_dir / f'labels/{dataset}/{os.path.splitext(filename)[0]}.txt'
+            with open(label_file_path, 'a') as label_file:
                 for label in labels:
                     _, class_index, x_center, y_center, bbox_width, bbox_height = label
                     label_file.write(f"{class_index} {x_center} {y_center} {bbox_width} {bbox_height}\n")
@@ -85,45 +96,18 @@ def split_images_and_labels(images_dir, labels, output_dir, train_split=0.95, va
 
 
 
-def yolo_to_original_annot(image_name, yolo_labels, annot_df, classes):
-    original_annot = []
 
-    for yolo_label in yolo_labels:
-        # Extract original width and height from annotation DataFrame
-        original_size = annot_df.loc[annot_df['filename'] == image_name, ['width', 'height']].iloc[0]
-        original_width, original_height = original_size['width'], original_size['height']
+def yolo_to_original_annot(image_name: str, yolo_labels: list, annot_df: pd.DataFrame, classes: list[str]) -> pd.DataFrame:
+    """
+    Convert YOLO labels to original annotations
 
-        # Extract YOLO label components
-        class_index, x_center, y_center, bbox_width, bbox_height, confidence = yolo_label
+    :param image_name: image filename
+    :param yolo_labels: YOLO labels
+    :param annot_df: Annotation DataFrame
+    :param classes: list of class names
+    :return: DataFrame containing original annotations
+    """
 
-        # Scale bounding box coordinates and dimensions to original size
-        original_x_center = x_center * original_width
-        original_y_center = y_center * original_height
-        original_bbox_width = bbox_width * original_width
-        original_bbox_height = bbox_height * original_height
-
-        # Calculate original bounding box coordinates
-        original_x_min = original_x_center - original_bbox_width / 2
-        original_y_min = original_y_center - original_bbox_height / 2
-        original_x_max = original_x_center + original_bbox_width / 2
-        original_y_max = original_y_center + original_bbox_height / 2
-
-        # Append original annotation to list
-        original_annot.append({
-            'filename': image_name,
-            'width': int(original_width),
-            'height': int(original_height),
-            'class': classes[int(class_index)],
-            'xmin': int(original_x_min),
-            'ymin': int(original_y_min),
-            'xmax': int(original_x_max),
-            'ymax': int(original_y_max),
-            'confidence': confidence
-        })
-
-    return pd.DataFrame(original_annot)
-
-def yolo_to_original_annot2(image_name: str, yolo_labels: , annot_df: pd.DataFrame, classes: list[str]) -> pd.DataFrame:
     # Extract original width and height from annotation DataFrame
     original_size = annot_df.loc[annot_df['filename'] == image_name, ['width', 'height']].iloc[0]
     original_width, original_height = original_size['width'], original_size['height']
@@ -159,5 +143,11 @@ def yolo_to_original_annot2(image_name: str, yolo_labels: , annot_df: pd.DataFra
         'original_x_max': 'xmax',
         'original_y_max': 'ymax'
     }, inplace=True)
+
+    # Convert bounding box coordinates to integers
+    original_annot['xmin'] = original_annot['xmin'].astype(int)
+    original_annot['ymin'] = original_annot['ymin'].astype(int)
+    original_annot['xmax'] = original_annot['xmax'].astype(int)
+    original_annot['ymax'] = original_annot['ymax'].astype(int)
 
     return original_annot

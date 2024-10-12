@@ -5,46 +5,53 @@ from pathlib import Path
 root_dir = Path.cwd().parent.resolve()
 output_dir = root_dir / 'PCB_DATASET' / 'output'
 
-model_name = 'yolov8n'
-# Additional arguments here
-epochs = 10  # Number of epochs to train the model
-batch = 16  # batch size, default 16. If batch=-1 it uses 60% of GPU memory, of set to float <1: uses % of GPU memory, if int, uses batch size - ONLY WHEN RUN ON GPU
-imgsz = 640  # Image size
-save_period = 1  # Save model every `save_period` epochs
-verbose = True  # Print output metrics for further analysis
-mixup = 0.3  # Blends two images and their labels, creating a composite image
-# box=6.0 # Weight of the box loss component in the loss function
-# cls = 2.0 # Weight of the classification loss in the total loss function
 
-all_data_yaml = f"""
-path: {output_dir}
-train: images/train
-val: images/val
+def main(model_name: str = 'yolov8n', epochs: int = 10, batch: int = 16, imgsz: int = 640, save_period: int = 1, verbose: bool = True, mixup: float = 0.3):
+    """
+    Train a YOLO model
+    :param model_name:
+    :param epochs:
+    :param batch:
+    :param imgsz:
+    :param save_period:
+    :param verbose:
+    :param mixup:
+    :return:
+    """
+    # ToDo: project name pattern to be consistent with the rest of the project - pydantic
+    project = f'pcb_{model_name}_all_epochs_{epochs}_batch_{batch}'  # save results to project/name
+    model_yolo = YOLO(f'{model_name}.pt')
+    result = model_yolo.train(data=str(data_path),
+                              epochs=epochs,
+                              batch=batch,
+                              lr0=0.001,
+                              lrf=0.0001,
+                              imgsz=imgsz,
+                              save_period=save_period,
+                              verbose=verbose,
+                              project=project,
+                              mixup=mixup)
 
-names:
-    0: missing_hole
-    1: mouse_bite
-    2: open_circuit
-    3: short
-    4: spur
-    5: spurious_copper
-"""
+if __name__ == '__main__':
 
-data_path = root_dir / 'process.yaml'
+    # TODO: put this into a config file and let the method handle the config file
+    all_data_yaml = f"""
+        path: {output_dir}
+        train: images/train
+        val: images/val
 
-with open(data_path, 'w') as f:
-    f.write(all_data_yaml)
+        names:
+            0: missing_hole
+            1: mouse_bite
+            2: open_circuit
+            3: short
+            4: spur
+            5: spurious_copper
+        """
 
-# %%
-project = f'pcb_{model_name}_all_epochs_{epochs}_batch_{batch}'  # save results to project/name
-model_yolo = YOLO(f'{model_name}.pt')
-result = model_yolo.train(data=str(data_path),
-                          epochs=epochs,
-                          batch=batch,
-                          lr0=0.001,
-                          lrf=0.0001,
-                          imgsz=imgsz,
-                          save_period=save_period,
-                          verbose=verbose,
-                          project=project,
-                          mixup=mixup)
+    data_path = root_dir / 'process.yaml'
+
+    with open(data_path, 'w') as f:
+        f.write(all_data_yaml)
+
+    main(model_name='yolov8n', epochs=1, batch=16, imgsz=640, save_period=1, verbose=True, mixup=0.3)
