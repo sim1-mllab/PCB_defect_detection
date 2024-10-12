@@ -4,17 +4,17 @@ import yaml
 from pathlib import Path
 from collections import Counter
 
-from ultralytics import YOLO
 from sklearn.model_selection import KFold
 
 # %%
-from pcb.data.load import parse_xml
-from pcb.data.preprocessing import resize_images, resize_annotations
+from pcb.process.load import parse_xml
+from pcb.process.preprocess import resize_images, resize_annotations
 from pcb.visualizations.annotations import visualize_annotations
-from pcb.model.train_yolo import convert_to_yolo_labels, split_images_and_labels
+from pcb.model.utils import convert_to_yolo_labels, split_images_and_labels
 
 # %%
-dataset_dir = Path.cwd().parent.resolve() / 'PCB_DATASET'
+root_dir = Path.cwd().parent.resolve()
+dataset_dir = root_dir / 'PCB_DATASET'
 
 # %%
 for dir_path in dataset_dir.rglob("*"):
@@ -56,6 +56,7 @@ for xml_path in annot_dir.rglob("*.xml"):
     all_data.extend(parse_xml(xml_path))
 
 annot_df = pd.DataFrame(all_data)
+annot_df.to_parquet(dataset_dir / 'annot_df.parquet')
 
 # %%
 annot_df.head()
