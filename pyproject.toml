@@ -15,6 +15,7 @@ matplotlib = "^3.9.2"
 pyyaml = "^6.0.2"
 numpy = "^2.1.2"
 fastparquet = "^2024.5.0"
+logging = "^0.4.9.6"
 
 
 [tool.poetry.group.dev.dependencies]

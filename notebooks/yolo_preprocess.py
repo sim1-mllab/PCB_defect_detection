@@ -11,6 +11,9 @@ from pcb.process.preprocess import resize_images, resize_annotations
 from pcb.visualizations.annotations import visualize_annotations
 from pcb.model.utils import convert_to_yolo_labels, split_images_and_labels
 
+from pcb.utils import get_logger
+
+logger = get_logger()
 # # %%
 # root_dir = Path.cwd().parent.resolve()
 # dataset_dir = root_dir / 'PCB_DATASET'
@@ -18,7 +21,7 @@ from pcb.model.utils import convert_to_yolo_labels, split_images_and_labels
 # # %%
 # for dir_path in dataset_dir.rglob("*"):
 #     if dir_path.is_dir():
-#         print(dir_path)
+#         logger.info(dir_path)
 #
 #
 # # %%
@@ -42,7 +45,7 @@ from pcb.model.utils import convert_to_yolo_labels, split_images_and_labels
 #     images_path = images_dir / subfolder
 #     annot_path = annot_dir / subfolder
 #
-#     print(f'{subfolder:<15} \t\
+#     logger.info(f'{subfolder:<15} \t\
 #             {count_files_in_folder(images_path)} images \t\
 #             {count_files_in_folder(annot_path)} annotations')
 #
@@ -96,7 +99,7 @@ from pcb.model.utils import convert_to_yolo_labels, split_images_and_labels
 #
 # #%%
 # cls_idx = list(range(len(classes)))
-# print(list(zip(classes, cls_idx)))
+# logger.info(list(zip(classes, cls_idx)))
 #
 #
 # indx = [l.stem for l in labels] # uses base filename as ID (no extension)
@@ -193,14 +196,8 @@ from pcb.model.utils import convert_to_yolo_labels, split_images_and_labels
 # fold_lbl_distrb.to_csv(save_path / "kfold_label_distribution.csv")
 
 
-if __name__ == "__main__":
-    print("step1")
-    root_dir = Path.cwd().parent.resolve()
-    dataset_dir = root_dir / 'PCB_DATASET'
-    images_dir = dataset_dir / 'images'
-    annot_dir = dataset_dir / 'Annotations'
+def preprocess(images_dir, annot_dir, dataset_dir):
 
-    print("step2")
     # List to store parsed data from all XML files
     all_data = []
 
@@ -211,7 +208,6 @@ if __name__ == "__main__":
     annot_df = pd.DataFrame(all_data)
     annot_df.to_parquet(dataset_dir / 'annotation.parquet')
 
-    print("step3")
     # Resize images and annotations
     resized_img_dir = Path(dataset_dir, 'images_resized')
     resize_images(images_dir, resized_img_dir)
@@ -226,10 +222,19 @@ if __name__ == "__main__":
                'short', 'spur', 'spurious_copper']
 
 
-    print("step4")
     # create YOLO labels
     yolo_labels = convert_to_yolo_labels(annot_df_resized, classes)
     split_images_and_labels(resized_img_dir, yolo_labels, output_dir)
 
-    print("step5")
+    logger.info("Done")
 
+
+if __name__ == "__main__":
+
+    # Set paths
+    root_dir = Path.cwd().parent.resolve()
+    dataset_dir = root_dir / 'PCB_DATASET'
+    images_dir = dataset_dir / 'images'
+    annot_dir = dataset_dir / 'Annotations'
+
+    preprocess(dataset_dir=dataset_dir, images_dir=images_dir, annot_dir=annot_dir)

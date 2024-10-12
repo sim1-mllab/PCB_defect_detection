@@ -6,8 +6,14 @@ import pandas as pd
 from pcb.model.utils import (read_yolo_labels_from_file, yolo_to_original_annot)
 from pcb.visualizations.annotations import visualize_annotations
 
-def main(dest_results_dir: Path, output_dir: Path):
 
+def inference(dest_results_dir: Path, output_dir: Path):
+    """
+    Run inference on the test dataset using the best model
+    :param dest_results_dir:
+    :param output_dir:
+    :return:
+    """
     # Load the best model
     best_model_path = dest_results_dir / 'weights/best.pt'
     model = YOLO(best_model_path)
@@ -17,6 +23,7 @@ def main(dest_results_dir: Path, output_dir: Path):
     metrics = model(source=test_data_dir, imgsz=640, conf=0.25, save=True, save_txt=True, save_conf=True)
 
     return metrics
+
 
 if __name__ == "__main__":
     # GLOBAL SETTINGS
@@ -30,7 +37,7 @@ if __name__ == "__main__":
     # LOAD ANNOTATIONS
     annot_df = pd.read_parquet(dataset_dir / 'annotation.parquet')
 
-    metric = main(dest_results_dir=dest_results_dir, output_dir=output_dir)
+    metric = inference(dest_results_dir=dest_results_dir, output_dir=output_dir)
 
 
     # Copy the results directory to the root directory

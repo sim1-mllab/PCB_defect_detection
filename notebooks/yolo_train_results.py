@@ -1,10 +1,11 @@
 import shutil
 from pathlib import Path
 
-import matplotlib.pyplot as plt
 import pandas as pd
 from pcb.visualizations.results import plot_result_losses_over_epoch
+from pcb.utils import get_logger
 
+logger = get_logger()
 
 def main(model_dir: str,
          results_dir: Path = Path.cwd() / 'results',

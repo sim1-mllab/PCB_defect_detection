@@ -1,9 +1,9 @@
 from ultralytics import YOLO
 from pathlib import Path
+from pcb.utils import get_logger
 
-# GLOBAL SETTINGS
-root_dir = Path.cwd().parent.resolve()
-output_dir = root_dir / 'PCB_DATASET' / 'output'
+logger = get_logger()
+
 
 
 def main(model_name: str = 'yolov8n', epochs: int = 10, batch: int = 16, imgsz: int = 640, save_period: int = 1, verbose: bool = True, mixup: float = 0.3):
@@ -32,7 +32,13 @@ def main(model_name: str = 'yolov8n', epochs: int = 10, batch: int = 16, imgsz: 
                               project=project,
                               mixup=mixup)
 
+    return result
+
+
 if __name__ == '__main__':
+    # GLOBAL SETTINGS
+    root_dir = Path.cwd().parent.resolve()
+    output_dir = root_dir / 'PCB_DATASET' / 'output'
 
     # TODO: put this into a config file and let the method handle the config file
     all_data_yaml = f"""
