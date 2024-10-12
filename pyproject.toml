@@ -1,0 +1,44 @@
+[tool.poetry]
+name = "pcb-defect-detection"
+version = "0.1.0"
+description = ""
+authors = ["Simone Lederer <simone.lederer@zeiss.com>"]
+readme = "README.md"
+packages = [{include = "*", from="src"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+torch = "^2.4.1"
+ultralytics = "^8.3.10"
+
+[tool.poetry.group.deep.dependencies]
+#torch = [
+#    { markers = "sys_platform != 'linux'", version = ">=2.4.1", source = "PyPI" },
+#    { markers = "sys_platform == 'linux'", version = "==1.12.1+cu116", source = "torchcu116" }
+#]
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.7.0"
+ruff = "^0.4.2"
+
+
+
+
+
+[[tool.poetry.source]]
+name = "PyPI"
+priority = "primary"
+
+[[tool.poetry.source]]
+name = "pytorch_cpu"
+url = "https://download.pytorch.org/whl/cpu"
+priority = "explicit"
+
+[[tool.poetry.source]]
+name = "torchcu116"
+url = "https://download.pytorch.org/whl/cu116"
+priority = "explicit"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
