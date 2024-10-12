@@ -6,7 +6,8 @@ test-output.xml
 
 data/
 
-catboost_info/
+# IGNORE YOLO
+*yolov8*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
