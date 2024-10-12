@@ -5,9 +5,9 @@ import pandas as pd
 from pcb.visualizations.results import plot_result_losses_over_epoch
 from pcb.utils import get_logger
 
-logger = get_logger()
+logger = get_logger(__name__)
 
-def main(model_dir: str,
+def eval_results(model_dir: str,
          results_dir: Path = Path.cwd() / 'results',
          data_dir: Path = Path.cwd() / 'PCB_DATASET'):
     results_model_dir = Path.cwd() / model_dir / 'train'
@@ -24,9 +24,9 @@ def main(model_dir: str,
     fig.savefig(results_dir / f'results_errors_{model_dir}.png')
 
 
-if __name__ == '__main__':
+def main():
     # ToDo:: set directories in global config
     root_dir = Path.cwd().parent.resolve()
     data_dir = root_dir / 'PCB_DATASET'
     results_dir = root_dir / 'results'
-    main(model_dir='pcb_yolov8n_all_epochs_1_batch_16', results_dir=results_dir, data_dir=data_dir)
+    eval_results(model_dir='pcb_yolov8n_all_epochs_1_batch_16', results_dir=results_dir, data_dir=data_dir)

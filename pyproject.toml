@@ -4,7 +4,8 @@ version = "0.1.0"
 description = ""
 authors = ["Simone Lederer <simone.lederer@zeiss.com>"]
 readme = "README.md"
-packages = [{include = "pcb", from="src"}]
+packages = [{include = "pcb", from="src"},
+    {include="scripts", from="src"},]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -31,15 +32,11 @@ opencv-python = "^4.10.0.84"
 name = "PyPI"
 priority = "primary"
 
-#[[tool.poetry.source]]
-#name = "pytorch_cpu"
-#url = "https://download.pytorch.org/whl/cpu"
-#priority = "explicit"
-#
-#[[tool.poetry.source]]
-#name = "torchcu116"
-#url = "https://download.pytorch.org/whl/cu116"
-#priority = "explicit"
+[tool.poetry.scripts]
+yolo-preprocess = "scripts.yolo_preprocess:main"
+yolo_train = "scripts.yolo_train:main"
+yolo-train_results = "scripts.yolo_train_results.py:main"
+yolo-predict = "scripts.yolo_predict:main"
 
 [build-system]
 requires = ["poetry-core"]

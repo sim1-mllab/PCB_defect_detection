@@ -4,7 +4,7 @@ import pandas as pd
 from ultralytics import YOLO
 
 # %%
-# GLOBAL SETTINGS (also used in notebooks/yolo_preprocess.py
+# GLOBAL SETTINGS (also used in scripts/yolo_preprocess.py
 ksplit: int = 3
 dataset_dir = Path.cwd().parent.resolve() / 'PCB_DATASET'
 output_dir = dataset_dir / 'output'

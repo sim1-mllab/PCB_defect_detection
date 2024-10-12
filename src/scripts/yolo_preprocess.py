@@ -13,7 +13,7 @@ from pcb.model.utils import convert_to_yolo_labels, split_images_and_labels
 
 from pcb.utils import get_logger
 
-logger = get_logger()
+logger = get_logger(__name__)
 # # %%
 # root_dir = Path.cwd().parent.resolve()
 # dataset_dir = root_dir / 'PCB_DATASET'
@@ -229,8 +229,7 @@ def preprocess(images_dir, annot_dir, dataset_dir):
     logger.info("Done")
 
 
-if __name__ == "__main__":
-
+def main():
     # Set paths
     root_dir = Path.cwd().parent.resolve()
     dataset_dir = root_dir / 'PCB_DATASET'

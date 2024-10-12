@@ -25,7 +25,7 @@ def inference(dest_results_dir: Path, output_dir: Path):
     return metrics
 
 
-if __name__ == "__main__":
+def main():
     # GLOBAL SETTINGS
     classes = ['missing_hole', 'mouse_bite', 'open_circuit', 'short', 'spur', 'spurious_copper']
     root_dir = Path.cwd().parent.resolve()
