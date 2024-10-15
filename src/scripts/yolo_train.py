@@ -2,8 +2,10 @@ import timeit
 from typing import Literal
 from ultralytics import YOLO
 from pathlib import Path
-from pcb.utils import get_logger
+from pcb.utils import get_logger, timer
 import torch
+
+
 logger = get_logger(__name__)
 
 def _is_mps_available() -> bool:
@@ -24,9 +26,10 @@ def _is_mps_available() -> bool:
     return True
 
 
+@timer
 def train(data_path: Path = Path.cwd() / 'process.yaml',
           model_name: str = 'yolov8n', epochs: int = 10, batch: int = 16, imgsz: int = 640, save_period: int = 1,
-          verbose: bool = True, mixup: float = 0.3, device: Literal['cpu', 'mpg', 'cpu'] | None = None,
+          verbose: bool = True, mixup: float = 0.3, device: Literal['cpu', 'mpg', 0] | None = None,
           mosaic: float=1.0):
     """
     Train a YOLO model
@@ -49,6 +52,15 @@ def train(data_path: Path = Path.cwd() / 'process.yaml',
             logger.warning("MPS is not available. Switching to CPU.")
             logger.info("If GPUs are available, please specify the device as 'cuda'.")
             device = 'cpu'
+    if device == 'cuda':
+        if not torch.cuda.is_available():
+            logger.warning("GPU is not available. Switching to CPU.")
+            device = 'cpu'
+
+    if isinstance(batch, float):
+        if device != 'cuda':
+            logger.warning("Batch size must be an integer when not running on GPU. Switching to default batch size of "
+                           "16.")
 
     logger.info(f"Storing data in project: {project}")
     model_yolo = YOLO(f'{model_name}.pt')
@@ -63,7 +75,7 @@ def train(data_path: Path = Path.cwd() / 'process.yaml',
                               project=project,
                               mixup=mixup,
                               device=device,
-                              mosaic=mosaic
+                              mosaic=mosaic,
                               )
 
     logger.info("Training completed.")
@@ -95,12 +107,8 @@ def main():
     with open(data_path, 'w') as f:
         f.write(all_data_yaml)
 
-    start_time = timeit.timeit()
-    train(data_path=data_path, model_name='yolov8n', epochs=10, batch=16, imgsz=640, save_period=5, verbose=True,
-          mixup=0.3, device='cpu', mosaic=1.0)
-    end_time = timeit.timeit()
-    total_time = end_time - start_time
-    logger.info(f"Training took {total_time} seconds, which is equivalent to {total_time / 60} minutes")
+    train(data_path=data_path, model_name='yolov8m', epochs=100, batch=-1, imgsz=640, save_period=5, verbose=True,
+          mixup=0.3, device='cuda', mosaic=1.0)
 
 
 if __name__ == '__main__':

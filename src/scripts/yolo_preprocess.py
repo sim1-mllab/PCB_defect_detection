@@ -210,6 +210,7 @@ def preprocess(images_dir, annot_dir, dataset_dir):
 
     # Resize images and annotations
     resized_img_dir = Path(dataset_dir, 'images_resized')
+    #ToDo: add image size as parameter to be handed into preprocess
     resize_images(images_dir, resized_img_dir)
 
     annot_df_resized = resize_annotations(annot_df)

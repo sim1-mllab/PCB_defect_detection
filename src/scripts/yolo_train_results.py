@@ -16,26 +16,32 @@ def eval_results(model_dir: str,
     :param results_dir: directory of the results
     :return:
     """
+    #ToDo: add data_dir to the function signature
     results_model_dir = Path.cwd() / model_dir / 'train'
 
+    logger.info("Copying results to results directory.")
     shutil.copytree(src=results_model_dir, dst=results_dir, dirs_exist_ok=True)
 
+    logger.info("Reading results.")
     results_df = pd.read_csv(results_dir / 'results.csv', index_col=0)
     results_df.columns = results_df.columns.str.strip()
     results_df = results_df.apply(pd.to_numeric, errors='coerce').dropna()
     results_df.reset_index(inplace=True)
 
+    logger.info("Plotting results.")
     fig = plot_result_losses_over_epoch(results_df=results_df)
 
+    logger.info("Saving results.")
     fig.savefig(results_dir / f'results_errors_{model_dir}.png')
 
 
 def main():
-    # ToDo:: set directories in global config
+    # ToDo: set directories in global config
+    # ToDO: add click/argparse for arguments
     root_dir = Path.cwd().parent.resolve()
     data_dir = root_dir / 'PCB_DATASET'
     results_dir = root_dir / 'results'
-    eval_results(model_dir='pcb_yolov8n_all_epochs_150_batch_16', results_dir=results_dir, data_dir=data_dir)
+    eval_results(model_dir='pcb_yolov8m_all_epochs_100_batch_-1', results_dir=results_dir)
 
 
 if __name__ == '__main__':
