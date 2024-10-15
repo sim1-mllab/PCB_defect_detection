@@ -23,7 +23,7 @@ def visualize_annotations(image_name: str, images_dir: str, annot_df: pd.DataFra
 
 
     # Read image
-    image = cv2.imread(image_path)
+    image = cv2.imread(str(image_path))
 
     # Filter annotations for the current image
     annotations = annot_df[annot_df['filename'] == image_name]

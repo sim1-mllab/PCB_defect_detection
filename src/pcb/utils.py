@@ -1,5 +1,7 @@
 import logging
 from typing import Literal
+import functools
+import time
 
 _LOG_FORMAT = "%(asctime)s - %(levelname)s - %(name)s - %(funcName)s() --  %(message)s"
 _DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
@@ -19,6 +21,24 @@ def get_logger(name: str) -> logging.Logger:
     logger = logging.getLogger(name)
 
     return logger
+
+
+def timer(func: callable) -> callable:
+    """
+    Decorator to measure the time of a function
+    :param func: any exectuable function
+    :return:
+    """
+    logger = get_logger(__name__)
+    @functools.wraps(func)
+    def wrapper_timer(*args, **kwargs):
+        tic = time.perf_counter()
+        value = func(*args, **kwargs)
+        toc = time.perf_counter()
+        elapsed_time = toc - tic
+        logger.info(f"Elapsed time: {elapsed_time:0.4f} seconds")
+        return value
+    return wrapper_timer
 
 
 def get_subfolder(image_name: str) -> Literal['Missing_hole', 'Mouse_bite', 'Open_circuit', 'Short', 'Spur',
