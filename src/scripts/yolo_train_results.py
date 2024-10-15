@@ -9,7 +9,13 @@ logger = get_logger(__name__)
 
 def eval_results(model_dir: str,
          results_dir: Path = Path.cwd() / 'results',
-         data_dir: Path = Path.cwd() / 'PCB_DATASET'):
+         ) -> None:
+    """
+    Evaluate the results of the model training
+    :param model_dir: directory of the model
+    :param results_dir: directory of the results
+    :return:
+    """
     results_model_dir = Path.cwd() / model_dir / 'train'
 
     shutil.copytree(src=results_model_dir, dst=results_dir, dirs_exist_ok=True)
@@ -29,4 +35,8 @@ def main():
     root_dir = Path.cwd().parent.resolve()
     data_dir = root_dir / 'PCB_DATASET'
     results_dir = root_dir / 'results'
-    eval_results(model_dir='pcb_yolov8n_all_epochs_1_batch_16', results_dir=results_dir, data_dir=data_dir)
+    eval_results(model_dir='pcb_yolov8n_all_epochs_150_batch_16', results_dir=results_dir, data_dir=data_dir)
+
+
+if __name__ == '__main__':
+    main()

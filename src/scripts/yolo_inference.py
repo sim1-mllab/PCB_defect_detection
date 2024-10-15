@@ -3,13 +3,16 @@ from ultralytics import YOLO
 import shutil
 import pandas as pd
 
+from pcb.utils import timer, get_logger
 from pcb.model.utils import (read_yolo_labels_from_file, yolo_to_original_annot)
 from pcb.visualizations.annotations import visualize_annotations
 
+logger = get_logger(__name__)
 
-def inference(dest_results_dir: Path, output_dir: Path):
+@timer
+def inference(dest_results_dir: Path, output_dir: Path, run_tiled_inference: bool = False):
     """
-    Run inference on the test dataset using the best model
+    Run inference on the test dataset using the best model - stores predicted labels in run/detect/predict/labels
     :param dest_results_dir:
     :param output_dir:
     :return:
@@ -18,7 +21,7 @@ def inference(dest_results_dir: Path, output_dir: Path):
     best_model_path = dest_results_dir / 'weights/best.pt'
     model = YOLO(best_model_path)
 
-    # RUN INFERENCE on the test process
+    logger.info("RUN INFERENCE on the test process")
     test_data_dir = output_dir / 'images' / 'val'
     metrics = model(source=test_data_dir, imgsz=640, conf=0.25, save=True, save_txt=True, save_conf=True)
 
