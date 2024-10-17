@@ -41,7 +41,6 @@ def main():
     # ToDo: set directories in global config
     # ToDO: add click/argparse for arguments
     root_dir = Path.cwd().parent.resolve()
-    data_dir = root_dir / "PCB_DATASET"
     results_dir = root_dir / "results"
     eval_results(
         model_dir="pcb_yolov8m_all_epochs_100_batch_-1", results_dir=results_dir

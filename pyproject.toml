@@ -54,3 +54,10 @@ yolo-predict = "scripts.yolo_inference:main"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.bandit]
+skips = [
+	"B405", # TODO: fix xml package usage
+	"B314",	# TODO: fix xml package usage
+]
+#exclude_dirs = ["*/tests/*"]

@@ -1,4 +1,4 @@
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ET  # ToDo: rewrite using defusedxml package - package not safe
 
 
 def parse_xml(xml_file: str) -> list[list[str : str | int | float]]:
