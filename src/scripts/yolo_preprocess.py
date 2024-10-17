@@ -1,14 +1,9 @@
 import pandas as pd
-import shutil
-import yaml
 from pathlib import Path
-from collections import Counter
 
-from sklearn.model_selection import KFold
 
 from pcb.process.load import parse_xml
 from pcb.process.preprocess import resize_images, resize_annotations
-from pcb.visualizations.annotations import visualize_annotations
 from pcb.model.utils import convert_to_yolo_labels, split_images_and_labels
 
 from pcb.utils import get_logger
@@ -197,7 +192,6 @@ logger = get_logger(__name__)
 
 
 def preprocess(images_dir, annot_dir, dataset_dir):
-
     # List to store parsed data from all XML files
     all_data = []
 
@@ -206,22 +200,27 @@ def preprocess(images_dir, annot_dir, dataset_dir):
         all_data.extend(parse_xml(xml_path))
 
     annot_df = pd.DataFrame(all_data)
-    annot_df.to_parquet(dataset_dir / 'annotation.parquet')
+    annot_df.to_parquet(dataset_dir / "annotation.parquet")
 
     # Resize images and annotations
-    resized_img_dir = Path(dataset_dir, 'images_resized')
-    #ToDo: add image size as parameter to be handed into preprocess
+    resized_img_dir = Path(dataset_dir, "images_resized")
+    # ToDo: add image size as parameter to be handed into preprocess
     resize_images(images_dir, resized_img_dir)
 
     annot_df_resized = resize_annotations(annot_df)
 
-    output_dir = dataset_dir / 'output'
+    output_dir = dataset_dir / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # define classes
-    classes = ['missing_hole', 'mouse_bite', 'open_circuit',
-               'short', 'spur', 'spurious_copper']
-
+    classes = [
+        "missing_hole",
+        "mouse_bite",
+        "open_circuit",
+        "short",
+        "spur",
+        "spurious_copper",
+    ]
 
     # create YOLO labels
     yolo_labels = convert_to_yolo_labels(annot_df_resized, classes)
@@ -233,8 +232,8 @@ def preprocess(images_dir, annot_dir, dataset_dir):
 def main():
     # Set paths
     root_dir = Path.cwd().parent.resolve()
-    dataset_dir = root_dir / 'PCB_DATASET'
-    images_dir = dataset_dir / 'images'
-    annot_dir = dataset_dir / 'Annotations'
+    dataset_dir = root_dir / "PCB_DATASET"
+    images_dir = dataset_dir / "images"
+    annot_dir = dataset_dir / "Annotations"
 
     preprocess(dataset_dir=dataset_dir, images_dir=images_dir, annot_dir=annot_dir)

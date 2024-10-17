@@ -1,10 +1,10 @@
 # Coding Challenge PCB Defect Detection
 
 This repository contains source code used to preprocess, train, evaluate, and visualize the results of a YOLOv8 model.
-In particular, this source code is used to detect defects in printed circuit boards (PCBs). 
+In particular, this source code is used to detect defects in printed circuit boards (PCBs).
 This is just an example of how to use the YOLOv8 model for object detection and not to be used in production.
 
-This code base is not extensively tested nor optimized for performance. 
+This code base is not extensively tested nor optimized for performance.
 It is meant to be a starting point for further development and research.
 
 Typehints are used but not enforced or checked.
@@ -31,19 +31,28 @@ The repository is structured as follows:
 poetry install
 ```
 
-NOTE: If you are using a GPU, poetry automatically installs the GPU version of PyTorch (assuming the system in 
-`linux`. If you are using a different system, you might need to install the correct version of PyTorch manually or 
+NOTE: If you are using a GPU, poetry automatically installs the GPU version of PyTorch (assuming the system in
+`linux`. If you are using a different system, you might need to install the correct version of PyTorch manually or
 edit the settings in the [`pyproject.toml`](pyproject.toml) file.
 
+4. Install pre-commit
+This repository makes use of a few linters and others in a pre-commit file. If you plan on
+contributing, run
+```bash
+poetry run pre-commit install
+```
+before you start commiting.
+
+
+
 ## Data
-The scripts assume the [`PCB_DATASET`](https://www.kaggle.com/datasets/akhatova/pcb-defects/data) being stored in a 
-folder at the same level as the repository, i.e. when you 
-run `ls ..` it will show something like this:   
+The scripts assume the [`PCB_DATASET`](https://www.kaggle.com/datasets/akhatova/pcb-defects/data) being stored in a
+folder at the same level as the repository, i.e. when you
+run `ls ..` it will show something like this:
 ```
 PCB_DATASET/
 PCB_defect_detection/
 ```
-
 
 
 ## Run Analysis

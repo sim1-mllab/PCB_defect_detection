@@ -3,7 +3,9 @@ import cv2
 import pandas as pd
 
 
-def resize_images(input_dir: str, output_dir: str, target_size: tuple = (640, 640)) -> None:
+def resize_images(
+    input_dir: str, output_dir: str, target_size: tuple = (640, 640)
+) -> None:
     """
     Resize images in the input directory and save them to the output directory
     :param input_dir:
@@ -26,8 +28,9 @@ def resize_images(input_dir: str, output_dir: str, target_size: tuple = (640, 64
         cv2.imwrite(output_path, resized_image)
 
 
-
-def resize_annotations(annot_df: pd.DataFrame, target_size: tuple=(640, 640)) -> pd.DataFrame:
+def resize_annotations(
+    annot_df: pd.DataFrame, target_size: tuple = (640, 640)
+) -> pd.DataFrame:
     """
     Resize the bounding box coordinates in the annotation DataFrame
     :param annot_df: DataFrame containing annotations
@@ -38,29 +41,28 @@ def resize_annotations(annot_df: pd.DataFrame, target_size: tuple=(640, 640)) ->
 
     # Iterate through the annotation DataFrame
     for index, row in annot_df.iterrows():
-
         # Resize the bounding box coordinates
-        width_ratio = target_size[0] / row['width']
-        height_ratio = target_size[1] / row['height']
+        width_ratio = target_size[0] / row["width"]
+        height_ratio = target_size[1] / row["height"]
 
-        resized_xmin = int(row['xmin'] * width_ratio)
-        resized_ymin = int(row['ymin'] * height_ratio)
-        resized_xmax = int(row['xmax'] * width_ratio)
-        resized_ymax = int(row['ymax'] * height_ratio)
+        resized_xmin = int(row["xmin"] * width_ratio)
+        resized_ymin = int(row["ymin"] * height_ratio)
+        resized_xmax = int(row["xmax"] * width_ratio)
+        resized_ymax = int(row["ymax"] * height_ratio)
 
         # Update the all process list with resized annotations
-        all_data.append({
-            'filename': row['filename'],
-            'width': target_size[0],
-            'height': target_size[1],
-            'class': row['class'],
-            'xmin': resized_xmin,
-            'ymin': resized_ymin,
-            'xmax': resized_xmax,
-            'ymax': resized_ymax
-        })
+        all_data.append(
+            {
+                "filename": row["filename"],
+                "width": target_size[0],
+                "height": target_size[1],
+                "class": row["class"],
+                "xmin": resized_xmin,
+                "ymin": resized_ymin,
+                "xmax": resized_xmax,
+                "ymax": resized_ymax,
+            }
+        )
 
     annot_df_resized = pd.DataFrame(all_data)
     return annot_df_resized
-
-
