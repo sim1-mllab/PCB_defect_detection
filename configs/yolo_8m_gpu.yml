@@ -1,0 +1,9 @@
+hyperparameters:
+    model_name: 'yolov8m'
+    epochs: 100
+    batch: -1
+    imgsz: 640
+    save_period: 5
+    mixup: 0.3
+    device: 'cuda'
+    mosaic: 1.0
