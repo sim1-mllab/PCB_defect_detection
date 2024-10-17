@@ -16,6 +16,7 @@ The repository is structured as follows:
     - `pcb/`: contains the source code for preprocessing, training, evaluation, visualization, utils
     - `scripts/`: contains the scripts for running the analysis
 - `.gitignore`: contains the files and folders that are ignored by git
+- `.pre-commit-config.yml`: pre-commit settings, exectuted locally with every `git commit`, containes linter and other security checks
 - `.python-version`: contains the python version used in the project
 - `README.md`: contains the documentation for the project
 - `poetry.lock`: contains the lock file for the project
